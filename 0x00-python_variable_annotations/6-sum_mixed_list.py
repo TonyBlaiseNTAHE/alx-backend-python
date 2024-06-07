@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Type of annotation
+"""Complex types - mixed list
 """
 from typing import List, Union
 
 
-def sum_mixed_list(mxd_list: List[Union[float, int]]) -> float:
-    """
+def sum_mixed_list(mxd_lst: List[Union[int, float]]) -> float:
+    """a type annonated function
     args:
-     input_list:  a list of floats and integers
-    returns: the sum of floats
+        mxd_lst: List[float, int]
+    return:
+        float
     """
-    return float(sum(mxd_list))
+    return float(sum(mxd_lst))
