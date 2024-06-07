@@ -9,4 +9,5 @@ def to_str(n: float) -> str:
      n: a float
     returns: a string representation of a float
     """
-    return n
+    s = str(n)
+    return s
