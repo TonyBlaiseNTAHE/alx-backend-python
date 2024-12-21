@@ -1,71 +1,76 @@
 #!/usr/bin/env python3
-"""0. Parameterize a unit test
-1. Parameterize a unit test
-2. Mock HTTP calls
-3. Parameterize and patch
-"""
+""" doc doc doc """
 import unittest
-from unittest.mock import patch, Mock
 from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize
-from client import GithubOrgClient
+from typing import Any, Tuple, Dict
+from unittest.mock import patch, Mock
 
 
 class TestAccessNestedMap(unittest.TestCase):
-    """first unit test for utils.access_nested_map
-    """
-    @parameterized.expand([
-        ({"a": 1}, ("a",), 1),
-        ({"a": {"b": 2}}, ("a",), {"b": 2}),
-        ({"a": {"b": 2}}, ("a", "b"), 2),
-    ])
-    def test_access_nested_map(self, nested_map, path, expected):
-        """Test accessing a value in a nested map with a key path.
-        """
+    """doc doc doc"""
+
+    @parameterized.expand(
+        [
+            ({"a": 1}, ("a",), 1),
+            ({"a": {"b": 2}}, ("a",), {"b": 2}),
+            ({"a": {"b": 2}}, ("a", "b"), 2),
+        ]
+    )
+    def test_access_nested_map(
+        self, nested_map: Dict[str, Any], path: Tuple[str], expected: Any
+    ) -> None:
+        """doc doc doc"""
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
-    @parameterized.expand([
-        ({}, ("a",)),
-        ({"a": 1}, ("a", "b"))
-    ])
-    def test_access_nested_map_exception(self, nested_map, path):
-        """Test accessing a value in a nested map with a key path.
-        """
+    @parameterized.expand([({}, ("a",)), ({"a": 1}, ("a", "b"))])
+    def test_access_nested_map_exception(
+        self, nested_map: Dict[str, Any], path: Tuple[str]
+    ) -> None:
+        """doc doc doc"""
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
 
 
 class TestGetJson(unittest.TestCase):
-    """second unit test for utils.get_json
-    """
-    @parameterized.expand([
-        ("http://example.com", {"payload": True}),
-        ("http://example.com/1", {"payload": False}),
-    ])
-    def test_get_json(self, url, expected):
-        """Test get_json
-        """
-        with patch('utils.requests.get') as mock_get:
-            mock_get.return_value = Mock()
-            mock_get.return_value.json.return_value = expected
-            self.assertEqual(get_json(url), expected)
+    """doc doc doc"""
+
+    @parameterized.expand(
+        [
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": False}),
+        ]
+    )
+    @patch("requests.get")
+    def test_get_json(
+        self, test_url: str, test_payload: Dict[str, Any], mock_get: Mock
+    ) -> None:
+        """doc doc doc"""
+        mock_get.return_value.json.return_value = test_payload
+        self.assertEqual(get_json(test_url), test_payload)
+        mock_get.assert_called_once_with(test_url)
 
 
 class TestMemoize(unittest.TestCase):
-    """third unit test for utils.memoize
-    """
-    def test_memoize(self):
-        """Test memoize
-        """
+    """doc doc doc"""
+
+    def test_memoize(self) -> None:
+        """doc doc doc"""
+
         class TestClass:
-            def a_method(self):
+            """doc doc doc"""
+
+            def a_method(self) -> int:
+                """doc doc doc"""
                 return 42
 
             @memoize
-            def a_property(self):
+            def a_property(self) -> int:
+                """doc doc doc"""
                 return self.a_method()
-        with patch.object(TestClass, 'a_method') as mock:
-            test = TestClass()
-            test.a_property
-            test.a_property
-            mock.assert_called_once()
+
+        with patch.object(TestClass, "a_method", return_value=42) as mocked:
+            test_class = TestClass()
+            self.assertEqual(test_class.a_property, 42)
+            self.assertEqual(test_class.a_property, 42)
+            mocked.assert_called_once()
